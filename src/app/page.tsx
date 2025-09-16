@@ -176,7 +176,7 @@ export default function Home() {
                     <p className="text-muted-foreground text-lg">
                         Hasilkan prompt AI untuk fotografi produk fashion Anda.
                     </p>
-                    <p className="text-sm text-muted-foreground mt-2">
+                     <p className="text-sm text-muted-foreground mt-2">
                         Tools Seller, e- Course dan Konsultasi Jualan Online dengan Bantuan Ai, klik <a href="https://utas.me/omslamet" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Utas om Slamet</a>
                     </p>
                 </div>
@@ -190,9 +190,9 @@ export default function Home() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Masukkan API Key Gemini Anda (Opsional)</DialogTitle>
+                  <DialogTitle>Masukkan API Key Gemini Anda</DialogTitle>
                   <DialogDescription>
-                    Jika Anda memiliki API key sendiri, masukkan di sini. Jika tidak, aplikasi akan menggunakan key default. Kunci Anda akan disimpan dengan aman di browser Anda.
+                    Jika Anda tidak memasukkan kunci API, aplikasi akan menggunakan kunci default yang tersedia. Kunci Anda akan disimpan dengan aman di browser Anda.
                   </a-dialog-description>
                 </DialogHeader>
                 <Input 
@@ -323,7 +323,7 @@ export default function Home() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Pose Model</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValuechange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Pilih pose model" />
@@ -351,7 +351,7 @@ export default function Home() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Ukuran Foto</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValuechange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Pilih ukuran foto" />
