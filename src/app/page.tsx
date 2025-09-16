@@ -34,7 +34,7 @@ const formSchema = z.object({
   productDescription: z.string().min(2, {
     message: "Deskripsi produk minimal harus 2 karakter.",
   }),
-  style: z.enum(["Manekin Hantu", "Model Wanita", "Model Pria"]),
+  style: z.enum(["Mokup", "Model Wanita", "Model Pria"]),
   additionalDetails: z.string().optional(),
 });
 
@@ -143,7 +143,7 @@ export default function Home() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Manekin Hantu">Manekin Hantu</SelectItem>
+                          <SelectItem value="Mokup">Mokup</SelectItem>
                           <SelectItem value="Model Wanita">Model Wanita</SelectItem>
                           <SelectItem value="Model Pria">Model Pria</SelectItem>
                         </SelectContent>
