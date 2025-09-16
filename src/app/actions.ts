@@ -7,9 +7,10 @@ export async function handleGeneratePrompt(input: GenerateFashionPromptInput) {
   try {
     const result = await generateFashionPrompt(input);
     return { prompt: result.prompt };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error generating prompt:", error);
-    return { error: "Gagal membuat prompt. Silakan coba lagi." };
+    const errorMessage = error.message || "Gagal membuat prompt. Silakan coba lagi.";
+    return { error: errorMessage };
   }
 }
 
@@ -17,8 +18,9 @@ export async function handleDescribeImage(input: DescribeImageInput) {
   try {
     const result = await describeImage(input);
     return { description: result.description };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error describing image:", error);
-    return { error: "Gagal membuat deskripsi dari gambar. Silakan coba lagi." };
+    const errorMessage = error.message || "Gagal membuat deskripsi dari gambar. Silakan coba lagi.";
+    return { error: errorMessage };
   }
 }

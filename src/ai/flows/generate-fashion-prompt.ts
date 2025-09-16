@@ -13,7 +13,7 @@ import { z } from 'genkit';
 
 const GenerateFashionPromptInputSchema = z.object({
   productDescription: z.string().describe('The description of the fashion product.'),
-  style: z.string().describe('The desired style for the product photography (e.g., Ghost Mannequin, Female Model, Male Model).'),
+  style: z.string().describe('The desired style for the product photography (e.g., Mockup, Female Model, Male Model).'),
   additionalDetails: z.string().describe('Additional details about the product, such as pose, lighting, and background.'),
 });
 export type GenerateFashionPromptInput = z.infer<typeof GenerateFashionPromptInputSchema>;
@@ -31,7 +31,15 @@ const prompt = ai.definePrompt({
   name: 'generateFashionPromptPrompt',
   input: { schema: GenerateFashionPromptInputSchema },
   output: { schema: GenerateFashionPromptOutputSchema },
-  prompt: `Generate an AI art prompt for e-commerce product photography. Product: {{{productDescription}}}. Style: {{{style}}}. Extra details: {{{additionalDetails}}}. Output in one concise English sentence, suitable for Stable Diffusion or MidJourney. Add keywords: 'high resolution, professional studio photography, clean background'.`,
+  prompt: `You are an expert in creating prompts for AI image generation models like Stable Diffusion or MidJourney.
+Your task is to generate a concise, single-sentence English prompt for e-commerce product photography based on the provided details.
+
+Product Description: {{{productDescription}}}
+Photography Style: {{{style}}}
+Additional Details: {{{additionalDetails}}}
+
+The prompt must include the keywords: 'high resolution, professional studio photography, clean background'.
+Do not add any explanations or introductory text. Only output the final prompt.`,
 });
 
 const generateFashionPromptFlow = ai.defineFlow(
