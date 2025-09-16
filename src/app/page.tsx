@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, Sparkles, Copy, Check, Upload } from "lucide-react";
+import { Loader2, Sparkles, Copy, Check, Upload, KeyRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +30,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { handleGeneratePrompt, handleDescribeImage } from "@/app/actions";
 import { Logo } from "@/components/icons";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const formSchema = z.object({
   productDescription: z.string().min(2, {
@@ -48,9 +57,27 @@ export default function Home() {
   const [isCopied, setIsCopied] = useState(false);
   const [isDescribing, setIsDescribing] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState("");
+  const [isApiKeyDialogOpen, setIsApiKeyDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
+
+  useEffect(() => {
+    const storedApiKey = localStorage.getItem("geminiApiKey");
+    if (storedApiKey) {
+      setApiKey(storedApiKey);
+    }
+  }, []);
+
+  const handleApiKeySave = () => {
+    localStorage.setItem("geminiApiKey", apiKey);
+    setIsApiKeyDialogOpen(false);
+    toast({
+      title: "Sukses!",
+      description: "API Key Anda telah disimpan di browser.",
+    });
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,6 +94,15 @@ export default function Home() {
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      if (!apiKey) {
+        toast({
+          variant: "destructive",
+          title: "API Key Diperlukan",
+          description: "Silakan masukkan API Key Gemini Anda terlebih dahulu.",
+        });
+        setIsApiKeyDialogOpen(true);
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = async () => {
         const dataUri = reader.result as string;
@@ -75,7 +111,7 @@ export default function Home() {
         form.setValue("productDescription", "");
         
         try {
-          const result = await handleDescribeImage({ photoDataUri: dataUri });
+          const result = await handleDescribeImage({ photoDataUri: dataUri }, apiKey);
           if (result.description) {
             form.setValue("productDescription", result.description);
           } else if (result.error) {
@@ -100,11 +136,20 @@ export default function Home() {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!apiKey) {
+      toast({
+        variant: "destructive",
+        title: "API Key Diperlukan",
+        description: "Silakan masukkan API Key Gemini Anda terlebih dahulu.",
+      });
+      setIsApiKeyDialogOpen(true);
+      return;
+    }
     setIsLoading(true);
     setGeneratedPrompt("");
 
     try {
-      const result = await handleGeneratePrompt(values);
+      const result = await handleGeneratePrompt(values, apiKey);
       if (result.prompt) {
         setGeneratedPrompt(result.prompt);
       } else if (result.error) {
@@ -136,20 +181,47 @@ export default function Home() {
     }, 2000);
   };
 
-
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12">
       <div className="w-full max-w-2xl">
-        <header className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <Logo className="h-12 w-12 text-primary" />
-            <h1 className="text-4xl sm:text-5xl font-headline font-bold tracking-tight">
-              FashionPromptAI
-            </h1>
-          </div>
-          <p className="text-muted-foreground text-lg">
-            Hasilkan prompt AI untuk fotografi produk fashion Anda.
-          </p>
+        <header className="flex justify-between items-center mb-8">
+            <div className="flex items-center gap-4">
+                <Logo className="h-12 w-12 text-primary" />
+                <div className="text-left">
+                    <h1 className="text-4xl sm:text-5xl font-headline font-bold tracking-tight">
+                        FashionPromptAI
+                    </h1>
+                    <p className="text-muted-foreground text-lg">
+                        Hasilkan prompt AI untuk fotografi produk fashion Anda.
+                    </p>
+                </div>
+            </div>
+
+            <Dialog open={isApiKeyDialogOpen} onOpenChange={setIsApiKeyDialogOpen}>
+              <DialogTrigger asChild>
+                 <Button variant="outline" size="icon" className="shrink-0">
+                    <KeyRound />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Masukkan API Key Gemini Anda</DialogTitle>
+                  <DialogDescription>
+                    API Key Anda akan disimpan dengan aman di browser Anda dan tidak akan dibagikan dengan siapa pun. Dapatkan kunci Anda dari Google AI Studio.
+                  </DialogDescription>
+                </DialogHeader>
+                <Input 
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="Masukkan API Key Anda di sini"
+                />
+                <DialogFooter>
+                  <Button onClick={handleApiKeySave}>Simpan</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
         </header>
 
         <Card className="shadow-lg">
