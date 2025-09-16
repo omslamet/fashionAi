@@ -16,6 +16,7 @@ const GenerateFashionPromptInputSchema = z.object({
   style: z.string().describe('The desired style for the product photography (e.g., Mockup, Female Model, Male Model).'),
   modelType: z.string().describe('The ethnicity of the model (e.g., Indonesian Model, Caucasian Model).'),
   pose: z.string().describe('The desired pose for the model.'),
+  photoSize: z.string().describe('The desired aspect ratio for the photo (e.g., Square, Portrait).'),
   additionalDetails: z.string().describe('Additional details about the product, such as lighting, and background.'),
 });
 export type GenerateFashionPromptInput = z.infer<typeof GenerateFashionPromptInputSchema>;
@@ -40,9 +41,11 @@ Product Description: {{{productDescription}}}
 Photography Style: {{{style}}}
 Model Ethnicity: {{{modelType}}}
 Model Pose: {{{pose}}}
+Photo Size: {{{photoSize}}}
 Additional Details: {{{additionalDetails}}}
 
 The prompt must include the keywords: 'high resolution, professional studio photography, clean background'.
+Based on the 'Photo Size' input, add the appropriate aspect ratio keyword: '--ar 1:1' for 'Square', or '--ar 2:3' for 'Portrait'.
 Do not add any explanations or introductory text. Only output the final prompt.`,
 });
 

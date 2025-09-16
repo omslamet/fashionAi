@@ -38,6 +38,7 @@ const formSchema = z.object({
   style: z.enum(["Mokup", "Model Wanita", "Model Pria"]),
   modelType: z.enum(["Model Indonesia", "Model Bule"]),
   pose: z.enum(["Pose Berdiri Tegak", "Pose Berjalan", "Pose Duduk Santai", "Pose Dinamis", "Pose Close-up"]),
+  photoSize: z.enum(["Square", "Portrait"]),
   additionalDetails: z.string().optional(),
 });
 
@@ -58,6 +59,7 @@ export default function Home() {
       style: "Model Wanita",
       modelType: "Model Indonesia",
       pose: "Pose Berdiri Tegak",
+      photoSize: "Square",
       additionalDetails: "",
     },
   });
@@ -280,6 +282,31 @@ export default function Home() {
                       </Select>
                       <FormDescription>
                         Pilih pose yang diinginkan untuk model.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                 <FormField
+                  control={form.control}
+                  name="photoSize"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ukuran Foto</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih ukuran foto" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Square">Square</SelectItem>
+                          <SelectItem value="Portrait">Portrait</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Pilih rasio aspek untuk foto yang dihasilkan.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
