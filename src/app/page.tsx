@@ -32,9 +32,9 @@ import { Logo } from "@/components/icons";
 
 const formSchema = z.object({
   productDescription: z.string().min(2, {
-    message: "Product description must be at least 2 characters.",
+    message: "Deskripsi produk minimal harus 2 karakter.",
   }),
-  style: z.enum(["Ghost Mannequin", "Female Model", "Male Model"]),
+  style: z.enum(["Manekin Hantu", "Model Wanita", "Model Pria"]),
   additionalDetails: z.string().optional(),
 });
 
@@ -48,7 +48,7 @@ export default function Home() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       productDescription: "",
-      style: "Female Model",
+      style: "Model Wanita",
       additionalDetails: "",
     },
   });
@@ -64,15 +64,15 @@ export default function Home() {
       } else if (result.error) {
         toast({
           variant: "destructive",
-          title: "Error",
+          title: "Kesalahan",
           description: result.error,
         });
       }
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "An unexpected error occurred",
-        description: "Please try again later.",
+        title: "Terjadi kesalahan yang tidak terduga",
+        description: "Silakan coba lagi nanti.",
       });
     } finally {
       setIsLoading(false);
@@ -83,7 +83,7 @@ export default function Home() {
     navigator.clipboard.writeText(generatedPrompt);
     setIsCopied(true);
     toast({
-      title: "Copied to clipboard!",
+      title: "Disalin ke papan klip!",
     })
     setTimeout(() => {
       setIsCopied(false);
@@ -102,13 +102,13 @@ export default function Home() {
             </h1>
           </div>
           <p className="text-muted-foreground text-lg">
-            Generate AI prompts for your fashion product photography.
+            Hasilkan prompt AI untuk fotografi produk fashion Anda.
           </p>
         </header>
 
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="font-headline text-2xl">Create Your Prompt</CardTitle>
+            <CardTitle className="font-headline text-2xl">Buat Prompt Anda</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -118,12 +118,12 @@ export default function Home() {
                   name="productDescription"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Product Description</FormLabel>
+                      <FormLabel>Deskripsi Produk</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., White t-shirt with a graphic print" {...field} />
+                        <Input placeholder="cth., Kaos putih dengan cetakan grafis" {...field} />
                       </FormControl>
                       <FormDescription>
-                        Describe the fashion item you want to photograph.
+                        Jelaskan item fashion yang ingin Anda foto.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -135,21 +135,21 @@ export default function Home() {
                   name="style"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Output Style</FormLabel>
+                      <FormLabel>Gaya Keluaran</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a style" />
+                            <SelectValue placeholder="Pilih gaya" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Ghost Mannequin">Ghost Mannequin</SelectItem>
-                          <SelectItem value="Female Model">Female Model</SelectItem>
-                          <SelectItem value="Male Model">Male Model</SelectItem>
+                          <SelectItem value="Manekin Hantu">Manekin Hantu</SelectItem>
+                          <SelectItem value="Model Wanita">Model Wanita</SelectItem>
+                          <SelectItem value="Model Pria">Model Pria</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormDescription>
-                        Choose the desired photography style.
+                        Pilih gaya fotografi yang diinginkan.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -161,16 +161,16 @@ export default function Home() {
                   name="additionalDetails"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Additional Details</FormLabel>
+                      <FormLabel>Detail Tambahan</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="e.g., Dynamic pose, soft studio lighting, minimalist concrete background"
+                          placeholder="cth., Pose dinamis, pencahayaan studio yang lembut, latar belakang beton minimalis"
                           className="resize-none"
                           {...field}
                         />
                       </FormControl>
                        <FormDescription>
-                        Add extra details like pose, lighting, or background.
+                        Tambahkan detail tambahan seperti pose, pencahayaan, atau latar belakang.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -183,7 +183,7 @@ export default function Home() {
                   ) : (
                     <Sparkles className="mr-2 h-4 w-4" />
                   )}
-                  {isLoading ? "Generating..." : "Generate Prompt"}
+                  {isLoading ? "Membuat..." : "Buat Prompt"}
                 </Button>
               </form>
             </Form>
@@ -193,14 +193,14 @@ export default function Home() {
         {isLoading && (
           <div className="text-center p-8">
             <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-            <p className="mt-2 text-muted-foreground">AI is crafting your prompt...</p>
+            <p className="mt-2 text-muted-foreground">AI sedang menyusun prompt Anda...</p>
           </div>
         )}
 
         {generatedPrompt && (
           <Card className="mt-8 shadow-lg animate-in fade-in-50 duration-500">
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Generated Prompt</CardTitle>
+              <CardTitle className="font-headline text-2xl">Prompt yang Dihasilkan</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="bg-muted p-4 rounded-md relative group">

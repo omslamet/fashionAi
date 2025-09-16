@@ -8,6 +8,6 @@ export async function handleGeneratePrompt(input: GenerateFashionPromptInput) {
     return { prompt: result.prompt };
   } catch (error) {
     console.error("Error generating prompt:", error);
-    return { error: "Failed to generate prompt. Please try again." };
+    return { error: "Gagal membuat prompt. Silakan coba lagi." };
   }
 }
