@@ -176,6 +176,9 @@ export default function Home() {
                     <p className="text-muted-foreground text-lg">
                         Hasilkan prompt AI untuk fotografi produk fashion Anda.
                     </p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                        Tools Seller, e- Course dan Konsultasi Jualan Online dengan Bantuan Ai, klik <a href="https://utas.me/omslamet" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Utas om Slamet</a>
+                    </p>
                 </div>
             </div>
 
@@ -190,7 +193,7 @@ export default function Home() {
                   <DialogTitle>Masukkan API Key Gemini Anda (Opsional)</DialogTitle>
                   <DialogDescription>
                     Jika Anda memiliki API key sendiri, masukkan di sini. Jika tidak, aplikasi akan menggunakan key default. Kunci Anda akan disimpan dengan aman di browser Anda.
-                  </DialogDescription>
+                  </a-dialog-description>
                 </DialogHeader>
                 <Input 
                   type="password"
