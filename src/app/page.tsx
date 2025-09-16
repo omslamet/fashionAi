@@ -94,15 +94,6 @@ export default function Home() {
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (!apiKey) {
-        toast({
-          variant: "destructive",
-          title: "API Key Diperlukan",
-          description: "Silakan masukkan API Key Gemini Anda terlebih dahulu.",
-        });
-        setIsApiKeyDialogOpen(true);
-        return;
-      }
       const reader = new FileReader();
       reader.onloadend = async () => {
         const dataUri = reader.result as string;
@@ -136,15 +127,6 @@ export default function Home() {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!apiKey) {
-      toast({
-        variant: "destructive",
-        title: "API Key Diperlukan",
-        description: "Silakan masukkan API Key Gemini Anda terlebih dahulu.",
-      });
-      setIsApiKeyDialogOpen(true);
-      return;
-    }
     setIsLoading(true);
     setGeneratedPrompt("");
 
@@ -205,9 +187,9 @@ export default function Home() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Masukkan API Key Gemini Anda</DialogTitle>
+                  <DialogTitle>Masukkan API Key Gemini Anda (Opsional)</DialogTitle>
                   <DialogDescription>
-                    API Key Anda akan disimpan dengan aman di browser Anda dan tidak akan dibagikan dengan siapa pun. Dapatkan kunci Anda dari Google AI Studio.
+                    Jika Anda memiliki API key sendiri, masukkan di sini. Jika tidak, aplikasi akan menggunakan key default. Kunci Anda akan disimpan dengan aman di browser Anda.
                   </DialogDescription>
                 </DialogHeader>
                 <Input 

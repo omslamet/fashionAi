@@ -2,15 +2,17 @@
 
 import { generateFashionPrompt, GenerateFashionPromptInput } from "@/ai/flows/generate-fashion-prompt";
 import { describeImage, DescribeImageInput } from "@/ai/flows/describe-image-flow";
-import { genkit, configureGenkit } from 'genkit';
+import { configureGenkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
 
-async function initializeGenkit(apiKey: string) {
+async function initializeGenkit(clientApiKey?: string) {
+  const apiKey = clientApiKey || process.env.GOOGLE_API_KEY;
+
   if (!apiKey) {
-    throw new Error("API Key Gemini tidak tersedia.");
+    throw new Error("Tidak ada API Key Gemini yang dikonfigurasi. Harap masukkan satu di sisi klien atau atur di lingkungan server.");
   }
   
-  // Re-configure Genkit with the client's API key
+  // Re-configure Genkit with the determined API key
   configureGenkit({
     plugins: [
       googleAI({
