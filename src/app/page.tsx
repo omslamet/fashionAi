@@ -100,6 +100,14 @@ export default function Home() {
         setImagePreview(dataUri);
         setIsDescribing(true);
         form.setValue("productDescription", "");
+
+        if (!apiKey) {
+          toast({
+            variant: "destructive",
+            title: "Memakai API Key Cadangan",
+            description: "Anda tidak memasukkan API Key, jadi aplikasi akan menggunakan kunci default yang tersedia.",
+          });
+        }
         
         try {
           const result = await handleDescribeImage({ photoDataUri: dataUri }, apiKey);
@@ -129,6 +137,14 @@ export default function Home() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     setGeneratedPrompt("");
+
+    if (!apiKey) {
+      toast({
+        variant: "destructive",
+        title: "Memakai API Key Cadangan",
+        description: "Anda tidak memasukkan API Key, jadi aplikasi akan menggunakan kunci default yang tersedia.",
+      });
+    }
 
     try {
       const result = await handleGeneratePrompt(values, apiKey);
@@ -193,7 +209,7 @@ export default function Home() {
                   <DialogTitle>Masukkan API Key Gemini Anda</DialogTitle>
                   <DialogDescription>
                     Jika Anda tidak memasukkan kunci API, aplikasi akan menggunakan kunci default yang tersedia. Kunci Anda akan disimpan dengan aman di browser Anda.
-                  </a-dialog-description>
+                  </DialogDescription>
                 </DialogHeader>
                 <Input 
                   type="password"
@@ -323,7 +339,7 @@ export default function Home() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Pose Model</FormLabel>
-                      <Select onValuechange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Pilih pose model" />
@@ -351,7 +367,7 @@ export default function Home() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Ukuran Foto</FormLabel>
-                      <Select onValuechange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Pilih ukuran foto" />
