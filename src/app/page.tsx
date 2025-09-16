@@ -37,6 +37,7 @@ const formSchema = z.object({
   }),
   style: z.enum(["Mokup", "Model Wanita", "Model Pria"]),
   modelType: z.enum(["Model Indonesia", "Model Bule"]),
+  pose: z.enum(["Pose Berdiri Tegak", "Pose Berjalan", "Pose Duduk Santai", "Pose Dinamis", "Pose Close-up"]),
   additionalDetails: z.string().optional(),
 });
 
@@ -56,6 +57,7 @@ export default function Home() {
       productDescription: "",
       style: "Model Wanita",
       modelType: "Model Indonesia",
+      pose: "Pose Berdiri Tegak",
       additionalDetails: "",
     },
   });
@@ -258,19 +260,47 @@ export default function Home() {
 
                 <FormField
                   control={form.control}
+                  name="pose"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Pose Model</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih pose model" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Pose Berdiri Tegak">Pose Berdiri Tegak</SelectItem>
+                          <SelectItem value="Pose Berjalan">Pose Berjalan</SelectItem>
+                          <SelectItem value="Pose Duduk Santai">Pose Duduk Santai</SelectItem>
+                          <SelectItem value="Pose Dinamis">Pose Dinamis</SelectItem>
+                          <SelectItem value="Pose Close-up">Pose Close-up</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Pilih pose yang diinginkan untuk model.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="additionalDetails"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Detail Tambahan</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="cth., Pose dinamis, pencahayaan studio yang lembut, latar belakang beton minimalis"
+                          placeholder="cth., Pencahayaan studio yang lembut, latar belakang beton minimalis"
                           className="resize-none"
                           {...field}
                         />
                       </FormControl>
                        <FormDescription>
-                        Tambahkan detail tambahan seperti pose, pencahayaan, atau latar belakang.
+                        Tambahkan detail tambahan seperti pencahayaan, atau latar belakang.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
