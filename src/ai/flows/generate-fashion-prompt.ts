@@ -14,6 +14,7 @@ import { z } from 'genkit';
 const GenerateFashionPromptInputSchema = z.object({
   productDescription: z.string().describe('The description of the fashion product.'),
   style: z.string().describe('The desired style for the product photography (e.g., Mockup, Female Model, Male Model).'),
+  modelType: z.string().describe('The ethnicity of the model (e.g., Indonesian Model, Caucasian Model).'),
   additionalDetails: z.string().describe('Additional details about the product, such as pose, lighting, and background.'),
 });
 export type GenerateFashionPromptInput = z.infer<typeof GenerateFashionPromptInputSchema>;
@@ -36,6 +37,7 @@ Your task is to generate a concise, single-sentence English prompt for e-commerc
 
 Product Description: {{{productDescription}}}
 Photography Style: {{{style}}}
+Model Ethnicity: {{{modelType}}}
 Additional Details: {{{additionalDetails}}}
 
 The prompt must include the keywords: 'high resolution, professional studio photography, clean background'.

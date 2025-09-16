@@ -36,6 +36,7 @@ const formSchema = z.object({
     message: "Deskripsi produk minimal harus 2 karakter.",
   }),
   style: z.enum(["Mokup", "Model Wanita", "Model Pria"]),
+  modelType: z.enum(["Model Indonesia", "Model Bule"]),
   additionalDetails: z.string().optional(),
 });
 
@@ -54,6 +55,7 @@ export default function Home() {
     defaultValues: {
       productDescription: "",
       style: "Model Wanita",
+      modelType: "Model Indonesia",
       additionalDetails: "",
     },
   });
@@ -223,6 +225,31 @@ export default function Home() {
                       </Select>
                       <FormDescription>
                         Pilih gaya fotografi yang diinginkan.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="modelType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Jenis Model</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih jenis model" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Model Indonesia">Model Indonesia</SelectItem>
+                          <SelectItem value="Model Bule">Model Bule</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Pilih etnis model yang diinginkan.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
