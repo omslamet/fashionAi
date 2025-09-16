@@ -1,5 +1,8 @@
 "use server";
 
+import { config } from "dotenv";
+config();
+
 import { generateFashionPrompt, GenerateFashionPromptInput } from "@/ai/flows/generate-fashion-prompt";
 import { describeImage, DescribeImageInput } from "@/ai/flows/describe-image-flow";
 
