@@ -1,4 +1,4 @@
-import {genkit} from 'genkit';
+import { genkit, configureGenkit } from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
 // Konfigurasi Genkit untuk menggunakan Google AI.
