@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, Sparkles, Copy, Check } from "lucide-react";
+import { Loader2, Sparkles, Copy, Check, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +28,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { handleGeneratePrompt } from "@/app/actions";
+import { handleGeneratePrompt, handleDescribeImage } from "@/app/actions";
 import { Logo } from "@/components/icons";
 
 const formSchema = z.object({
@@ -42,6 +43,10 @@ export default function Home() {
   const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isDescribing, setIsDescribing] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,6 +57,41 @@ export default function Home() {
       additionalDetails: "",
     },
   });
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const dataUri = reader.result as string;
+        setImagePreview(dataUri);
+        setIsDescribing(true);
+        form.setValue("productDescription", "");
+        
+        try {
+          const result = await handleDescribeImage({ photoDataUri: dataUri });
+          if (result.description) {
+            form.setValue("productDescription", result.description);
+          } else if (result.error) {
+            toast({
+              variant: "destructive",
+              title: "Kesalahan",
+              description: result.error,
+            });
+          }
+        } catch (error) {
+           toast({
+            variant: "destructive",
+            title: "Terjadi kesalahan yang tidak terduga",
+            description: "Gagal menghasilkan deskripsi.",
+          });
+        } finally {
+          setIsDescribing(false);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -113,6 +153,39 @@ export default function Home() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <div className="space-y-2">
+                  <FormLabel>Gambar Produk</FormLabel>
+                  <FormControl>
+                     <Input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      ref={fileInputRef} 
+                      onChange={handleImageUpload}
+                    />
+                  </FormControl>
+                  <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isDescribing}>
+                    <Upload className="mr-2 h-4 w-4" />
+                    {isDescribing ? "Menganalisis..." : "Unggah Gambar"}
+                  </Button>
+                   <FormDescription>
+                    Unggah gambar untuk menghasilkan deskripsi secara otomatis.
+                  </FormDescription>
+
+                  {isDescribing && (
+                    <div className="flex items-center justify-center p-4">
+                      <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                      <p>AI sedang menganalisis gambar Anda...</p>
+                    </div>
+                  )}
+
+                  {imagePreview && (
+                    <div className="mt-4 border rounded-md p-2">
+                      <Image src={imagePreview} alt="Pratinjau Produk" width={200} height={200} className="rounded-md mx-auto" />
+                    </div>
+                  )}
+                </div>
+
                 <FormField
                   control={form.control}
                   name="productDescription"
@@ -177,7 +250,7 @@ export default function Home() {
                   )}
                 />
 
-                <Button type="submit" disabled={isLoading} className="w-full">
+                <Button type="submit" disabled={isLoading || isDescribing} className="w-full">
                   {isLoading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
